@@ -1,0 +1,74 @@
+version: "3.0"
+
+stories:
+
+  - story: sem cadastro
+    steps:
+      - intent: iniciar
+      - action: action_verificar_cliente
+      - slot_was_set:
+          - tem_cadastro: False
+
+  - story: cadastro sem agendamento – inicia agendamento
+    steps:
+      - intent: iniciar
+      - action: action_verificar_cliente
+      - slot_was_set:
+          - tem_cadastro: True
+          - agendamento_ativo: False
+      - intent: solicitar_agendamento
+      - action: utter_perguntar_data
+      - intent: informar_data
+      - action: utter_perguntar_turno
+      - intent: informar_turno
+      - action: action_agendar_coleta
+
+  - story: cadastro sem agendamento – nega agendamento
+    steps:
+      - intent: iniciar
+      - action: action_verificar_cliente
+      - slot_was_set:
+          - tem_cadastro: True
+          - agendamento_ativo: False
+      - intent: negar
+      - action: utter_encerramento
+
+  - story: cadastro com agendamento – cancelar fluxo completo
+    steps:
+      - intent: iniciar
+      - action: action_verificar_cliente
+      - slot_was_set:
+          - tem_cadastro: True
+          - agendamento_ativo: True
+      - intent: cancelar_agendamento
+      - action: utter_informar_agendamento_existente_e_perguntar_cancelar
+      - intent: affirm
+      - action: action_cancelar_coleta
+
+
+
+  - story: cadastro com agendamento – remarcar fluxo completo
+    steps:
+      - intent: iniciar
+      - action: action_verificar_cliente
+      - slot_was_set:
+          - tem_cadastro: True
+          - agendamento_ativo: True
+      - intent: remarcar_agendamento
+      - action: utter_informar_agendamento_existente_e_perguntar_remarcar
+      - intent: informar_data
+      - action: utter_perguntar_turno
+      - intent: informar_turno
+      - action: action_remarcar_coleta
+
+  - story: cadastro com agendamento – remarcar e nega
+    steps:
+      - intent: iniciar
+      - action: action_verificar_cliente
+      - slot_was_set:
+          - tem_cadastro: True
+          - agendamento_ativo: True
+      - intent: remarcar_agendamento
+      - action: utter_informar_agendamento_existente_e_perguntar_remarcar
+      - intent: negar
+      - action: utter_remarcacao_abortada

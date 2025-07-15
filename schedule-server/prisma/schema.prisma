@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Agendamento {
+  id_agendamento    Int               @id @default(autoincrement())
+  dia_agendado      DateTime
+  turno_agendado    String
+  observacoes       String?
+  dia_realizado     DateTime?
+  horario_realizado String?
+  id_cliente        Int
+  id_usuario        Int
+  id_zona           Int?
+  status            StatusAgendamento @default(PENDENTE)
+
+  cliente           Cliente           @relation(fields: [id_cliente], references: [id_cliente], onDelete: Cascade)
+  usuario           Usuario           @relation(fields: [id_usuario], references: [id_usuario])
+  zona              Zona?             @relation(fields: [id_zona], references: [id])
+
+  @@index([id_cliente], map: "idx_agendamentos_id_cliente")
+  @@index([id_usuario], map: "idx_agendamentos_id_usuario")
+  @@index([id_zona], map: "idx_agendamentos_id_zona")
+  @@map("agendamentos")
+}
+
+model Cliente {
+  id_cliente       Int           @id @default(autoincrement())
+  nome_cliente     String
+  telefone_cliente String        @unique
+  qr_code          String?       @unique
+  id_endereco      Int
+  tipo             TipoCliente   @default(PEQUENO_GERADOR)
+
+  agendamentos     Agendamento[]
+  endereco         Endereco      @relation(fields: [id_endereco], references: [id_endereco], onDelete: Cascade)
+  coletas          Coleta[]
+
+  @@index([id_endereco], map: "idx_clientes_id_endereco")
+  @@map("clientes")
+}
+
+model Coleta {
+  id_coleta         Int      @id @default(autoincrement())
+  dia_realizado     DateTime
+  horario_realizado DateTime
+  id_cliente        Int
+  id_usuario        Int
+
+  cliente           Cliente  @relation(fields: [id_cliente], references: [id_cliente], onDelete: Cascade)
+  usuario           Usuario  @relation(fields: [id_usuario], references: [id_usuario])
+
+  @@index([id_cliente], map: "idx_coletas_id_cliente")
+  @@index([id_usuario], map: "idx_coletas_id_usuario")
+  @@map("coletas")
+}
+
+model Endereco {
+  id_endereco Int       @id @default(autoincrement())
+  nome_rua    String
+  numero      String
+  bairro      String
+  id_zona     Int
+
+  clientes    Cliente[]
+  zona        Zona      @relation(fields: [id_zona], references: [id])
+
+  @@index([id_zona], map: "idx_enderecos_id_zona")
+  @@map("enderecos")
+}
+
+model Usuario {
+  id_usuario   Int           @id @default(autoincrement())
+  nome         String
+  email        String        @unique
+  senha        String
+  tipo_usuario String
+
+  agendamentos Agendamento[]
+  coletas      Coleta[]
+
+  @@map("usuarios")
+}
+
+model Admin {
+  id_admin           Int      @id @default(autoincrement())
+  nome               String
+  email              String   @unique
+  senha              String
+  precisa_redefinir  Boolean  @default(true)
+  criado_em          DateTime @default(now())
+  atualizado_em      DateTime @updatedAt
+
+  @@map("admin")
+}
+
+model Zona {
+  id                    Int           @id @default(autoincrement())
+  nome_da_zona          String        @unique
+  qtd_coletas_esperadas Int
+  dias                  Json
+  cor                   String
+
+  agendamentos          Agendamento[]
+  enderecos             Endereco[]
+
+  @@map("zonas")
+}
+
+enum StatusAgendamento {
+  PENDENTE
+  REALIZADO
+  CANCELADO
+}
+
+enum TipoCliente {
+  GRANDE_GERADOR
+  PEQUENO_GERADOR
+}

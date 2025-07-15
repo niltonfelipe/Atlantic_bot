@@ -1,0 +1,71 @@
+version: "3.1"
+
+nlu:
+- intent: iniciar
+  examples: |
+    - Olá
+    - Oi
+    - Bom dia
+    - Ei
+    - Alô
+
+- intent: solicitar_agendamento
+  examples: |
+    - Quero agendar uma coleta
+    - Agendar coleta
+    - Preciso de uma coleta
+    - Agendar
+    - Quando vocês podem vir?
+    - Agende para mim
+
+- intent: informar_data
+  examples: |
+    - [07/05/2025](data)
+    - [10/06/2025](data)
+    - [15/07/2025](data)
+    - [30/08/2025](data)
+    - [01/09/2025](data)
+
+- intent: informar_turno
+  examples: |
+    - [Manhã](turno)
+    - [Tarde](turno)
+    - [Noite](turno)
+
+- intent: remarcar_agendamento
+  examples: |
+    - Quero remarcar meu agendamento
+    - Remarcar coleta
+    - Trocar data da coleta
+    - Alterar agendamento
+
+- intent: cancelar_agendamento
+  examples: |
+    - Quero cancelar meu agendamento
+    - Cancelar coleta
+    - Desmarcar coleta
+    - Cancelar
+
+- intent: affirm
+  examples: |
+    - sim
+    - claro
+    - com certeza
+    - quero
+    - pode ser
+    - ok
+
+- intent: negar
+  examples: |
+    - não
+    - nop
+    - cancela
+    - não quero
+    - agora não
+
+- intent: goodbye
+  examples: |
+    - Tchau
+    - Até mais
+    - Obrigado
+    - Valeu

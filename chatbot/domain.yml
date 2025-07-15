@@ -1,0 +1,117 @@
+version: "3.0"
+
+intents:
+  - iniciar              
+  - solicitar_agendamento 
+  - informar_data
+  - informar_turno        
+  - remarcar_agendamento  
+  - cancelar_agendamento  
+  - afirmacao                
+  - negacao                 
+  - despedida               
+
+entities:
+  - data
+  - turno
+
+slots:
+  tem_cadastro:
+    type: bool
+    influence_conversation: false
+    mappings: []
+
+  nome:
+    type: text
+    influence_conversation: false
+    mappings: []
+
+  agendamento_ativo:
+    type: bool
+    influence_conversation: false
+    mappings: []
+
+  data_agendada:
+    type: text
+    influence_conversation: false
+    mappings: []
+
+  turno_agendado:
+    type: text
+    influence_conversation: false
+    mappings: []
+
+  nova_data:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: data
+
+  novo_turno:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: turno
+
+responses:
+
+  utter_saudacao_usuario_sem_cadastro:
+    - text: |
+        Olá! Não encontramos seu cadastro. 
+        Para se cadastrar, por favor procure nossa loja física ou ligue para (xx) xxxx-xxxx.
+
+  utter_saudacao_usuario_com_cadastro_sem_agendamento:
+    - text: |
+        Olá, {nome}! Vejo que você está cadastrado, mas não possui nenhum agendamento ativo, deseja agendar uma coleta?
+
+  utter_saudacao_usuario_com_cadastro_com_agendamento:
+    - text: |
+        Olá, {nome}! Vejo que você possui um agendamento ativo para o dia {data_agendada} (turno: {turno_agendado}). 
+        O que deseja fazer?
+        • Agendar nova coleta (só será possível após cancelar o existente)
+        • Cancelar este agendamento
+        • Remarcar este agendamento
+
+  utter_perguntar_data:
+    - text: "OK, para qual data você gostaria de agendar? (formato: DIA/MES/ANO)"
+
+  utter_perguntar_turno:
+    - text: "Certo. Para qual turno? (manhã ou tarde)"
+
+  utter_nao_tem_agendamento_para_remarcar:
+    - text: |
+        Você não possui nenhum agendamento ativo para remarcar.
+        Deseja agendar uma nova coleta? (sim/não)
+
+  utter_nao_tem_agendamento_para_cancelar:
+    - text: |
+        Você não possui nenhum agendamento ativo para cancelar.
+        Deseja agendar uma nova coleta? (sim/não)
+
+  utter_informar_agendamento_existente_e_perguntar_cancelar:
+    - text: |
+        Você possui um agendamento para o dia {data_agendada} (turno: {turno_agendado}). 
+        Tem certeza que deseja cancelar? (sim/não)
+
+  utter_informar_agendamento_existente_e_perguntar_remarcar:
+    - text: |
+        Você possui um agendamento para o dia {data_agendada} (turno: {turno_agendado}).
+        Para qual nova data e turno deseja remarcar?
+        (Primeiro informe a nova data)
+
+  utter_cancelamento_abortado:
+    - text: "Ok, cancelamento abortado. O que deseja agora? (agendar/remarcar/cancelar)"
+
+  utter_remarcacao_abortada:
+    - text: "Tudo bem, remarcação abortada. O que deseja agora? (agendar/remarcar/cancelar)"
+
+  utter_encerramento:
+    - text: "Certo, qualquer coisa é só chamar. Até logo!"
+
+actions:
+  - action_verificar_cliente
+  - action_agendar_coleta
+  - action_remarcar_coleta
+  - action_cancelar_coleta
