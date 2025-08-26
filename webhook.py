@@ -20,7 +20,7 @@ FORWARD_API_URL = "http://localhost:5005/webhooks/rest/webhook"
 
 
 def encaminhar_para_api(msg):
-    """Encaminha o payload da mensagem para o Rasa e envia a resposta via WhatsApp. Arth commit"""
+    """Encaminha o payload da mensagem para o Rasa e envia a resposta via WhatsApp. Yan commit"""
     sender = msg.get("from")
     message_body = msg.get("text", {}).get("body")
 
